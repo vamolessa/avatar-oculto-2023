@@ -348,8 +348,8 @@ window.onload = init;
 function init() {
 	console.log("hello there");
 
-	windows.onclick = playBgm;
-	windows.onkeydown = playBgm;
+	window.onclick = playBgm;
+	window.onkeydown = playBgm;
 
 	let canvas = document.getElementById("canvas");
 	let gl = canvas.getContext('webgl');
