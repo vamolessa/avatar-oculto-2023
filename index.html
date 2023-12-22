@@ -338,7 +338,9 @@ const mat4 = {
 	},
 }
 
-function playBgm() {
+let clicked = false;
+function onClicked() {
+	clicked = true;
 	let bgm = document.getElementById("bgm");
 	bgm.volume = 0.08;
 	bgm.play();
@@ -348,8 +350,8 @@ window.onload = init;
 function init() {
 	console.log("hello there");
 
-	window.onclick = playBgm;
-	window.onkeydown = playBgm;
+	window.onclick = onClicked;
+	window.onkeydown = onClicked;
 
 	let canvas = document.getElementById("canvas");
 	let gl = canvas.getContext('webgl');
@@ -440,11 +442,13 @@ function init() {
 	gl.enableVertexAttribArray(texCoordAttribLocation);
 
 	//
-	// Create texture
+	// Create textures
 	//
-	let textureImageElement = document.getElementById("texture");
-	let boxTexture = gl.createTexture();
-	gl.bindTexture(gl.TEXTURE_2D, boxTexture);
+	let avatarImageElement = document.getElementById("avatar");
+	let crateImageElement = document.getElementById("crate");
+
+	let crateTexture = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, crateTexture);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -452,7 +456,20 @@ function init() {
 	gl.texImage2D(
 		gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
 		gl.UNSIGNED_BYTE,
-		textureImageElement,
+		crateImageElement,
+	);
+	gl.bindTexture(gl.TEXTURE_2D, null);
+
+	let avatarTexture = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, avatarTexture);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.texImage2D(
+		gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
+		gl.UNSIGNED_BYTE,
+		avatarImageElement,
 	);
 	gl.bindTexture(gl.TEXTURE_2D, null);
 
@@ -493,7 +510,11 @@ function init() {
 		gl.clearColor(0.75, 0.85, 0.8, 1.0);
 		gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
-		gl.bindTexture(gl.TEXTURE_2D, boxTexture);
+		if (clicked) {
+			gl.bindTexture(gl.TEXTURE_2D, avatarTexture);
+		} else {
+			gl.bindTexture(gl.TEXTURE_2D, crateTexture);
+		}
 		gl.activeTexture(gl.TEXTURE0);
 
 		gl.drawElements(gl.TRIANGLES, boxIndices.length, gl.UNSIGNED_SHORT, 0);
@@ -510,7 +531,8 @@ function init() {
 	<canvas id="canvas" width="1200" height="900">
 		no HTML5 support :(
 	</canvas>
-	<img id="texture" src="texture.png" width="0" height="0"></img>
+	<img id="avatar" src="avatar.png" width="0" height="0"></img>
+	<img id="crate" src="crate.png" width="0" height="0"></img>
 	<audio id="bgm" src="all_along.ogg" autoplay></audio>
 </body>
 
