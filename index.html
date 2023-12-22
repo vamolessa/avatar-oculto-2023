@@ -338,17 +338,20 @@ const mat4 = {
 	},
 }
 
+function playBgm() {
+	let bgm = document.getElementById("bgm");
+	bgm.volume = 0.08;
+	bgm.play();
+}
+
 window.onload = init;
 function init() {
 	console.log("hello there");
 
-	let canvas = document.getElementById("canvas");
-	canvas.onclick = function() {
-		let bgm = document.getElementById("bgm");
-		bgm.volume = 0.08;
-		bgm.play();
-	}
+	windows.onclick = playBgm;
+	windows.onkeydown = playBgm;
 
+	let canvas = document.getElementById("canvas");
 	let gl = canvas.getContext('webgl');
 
 	if (!gl) {
@@ -503,7 +506,7 @@ function init() {
 </head>
 
 <body>
-	<p>CLICA NO CUBO!</p>
+	<p>CLICA!</p>
 	<canvas id="canvas" width="1200" height="900">
 		no HTML5 support :(
 	</canvas>
